@@ -1,0 +1,14 @@
+lights_group = 'group.luzes'
+
+entities_on = []
+
+for entity_id in hass.states.get(lights_group).attributes['entity_id']:
+    if hass.states.get(entity_id).state is 'on':
+        entities_on.append(hass.states.get(entity_id).attributes["friendly_name"])
+
+if len(entities_on) > 0:
+    
+    notification_tilte = "Luzes Ligadas"
+    notification_message = "As seguintes luzes ficaram ligadas:" '\n - ' + '\n - '.join(entities_on)
+    hass.services.call('persistent_notification', 'create', {'title' : notification_tilte, 'message': notification_message})
+    hass.services.call('notify', 'notify', {'title' : notification_tilte, 'message': notification_message})
